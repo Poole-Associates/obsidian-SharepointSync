@@ -1,7 +1,7 @@
 {
 	"id": "onedrive-sync-poole",
 	"name": "OneDrive Sync (Poole Associates)",
-	"version": "2.1.1",
+	"version": "2.2.0",
 	"minAppVersion": "1.12.0",
 	"description": "Sync your vault with OneDrive or a SharePoint document library. Poole Associates' build of OneDrive Sync by Jeff Steinbok.",
 	"author": "Poole Associates",
