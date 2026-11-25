@@ -345,7 +345,22 @@ describe('pathUtils', () => {
 			expect(shouldSyncVaultPath('notes/_OneDriveSyncLogs/x.md', false, false, '.obsidian')).toBe(true);
 		});
 
-		it('never syncs the OneDrive plugin\'s own folder, even with plugin sync enabled', () => {
+		it('never syncs this plugin\'s own folder, even with plugin sync enabled', () => {
+			expect(shouldSyncVaultPath('.obsidian/plugins/onedrive-sync-poole', false, false, '.obsidian')).toBe(false);
+			expect(shouldSyncVaultPath('.obsidian/plugins/onedrive-sync-poole/main.js', true, true, '.obsidian')).toBe(false);
+			expect(
+				shouldSyncVaultPath(
+					'.obsidian/plugins/onedrive-sync-poole/data.json', true, true, '.obsidian', false, false, true
+				)
+			).toBe(false);
+			expect(
+				shouldSyncVaultPath('.obsidian/plugins/onedrive-sync-poole/conflicts/abc/current', true, true, '.obsidian')
+			).toBe(false);
+		});
+
+		// The community-store version (id "onedrive-sync") is a different plugin
+		// but its folder must stay device-local too, if it's still installed.
+		it('never syncs the store version\'s folder either, even with plugin sync enabled', () => {
 			expect(shouldSyncVaultPath('.obsidian/plugins/onedrive-sync', false, false, '.obsidian')).toBe(false);
 			expect(shouldSyncVaultPath('.obsidian/plugins/onedrive-sync/main.js', true, true, '.obsidian')).toBe(false);
 			expect(shouldSyncVaultPath('.obsidian/plugins/onedrive-sync/manifest.json', true, true, '.obsidian')).toBe(false);

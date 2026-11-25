@@ -8,6 +8,9 @@
 
 Sync your Obsidian vault with **OneDrive**. Zero-config for personal Microsoft accounts; work and school (Entra ID) accounts are also supported with a one-time app registration. Mobile-friendly, battery-efficient.
 
+> [!NOTE]
+> **This is Poole Associates' build** of OneDrive Sync. It adds syncing with **SharePoint document libraries** for work and school accounts, and installs as a separate plugin, **OneDrive Sync (Poole Associates)** (id `onedrive-sync-poole`), so the community store's "OneDrive Sync" never updates it. Install it [through BRAT](#poole-associates-build-via-brat), and don't run it alongside the store version in the same vault.
+
 📖 [How It Works](docs/HOW_IT_WORKS.md) · [Troubleshooting](docs/TROUBLESHOOTING.md) · [Advanced Usage](docs/ADVANCED.md) · [Development](docs/DEVELOPMENT.md) · [Postmortem Process](docs/POSTMORTEM.md)
 
 > [!TIP]
@@ -35,6 +38,18 @@ Sync your Obsidian vault with **OneDrive**. Zero-config for personal Microsoft a
 
 ## 🚀 Installation
 
+### Poole Associates build (via BRAT)
+
+1. If the store's **OneDrive Sync** is installed in this vault, disable or uninstall it first (Settings → Community Plugins). Two sync plugins on one vault would fight over the same files.
+2. Install [BRAT](https://github.com/TfTHacker/obsidian42-brat) from Community Plugins and enable it.
+3. BRAT settings → **Add Beta Plugin** → `Poole-Associates/obsidian-OneDrive` → **Add Plugin**.
+4. Enable **OneDrive Sync (Poole Associates)** in Settings → Community Plugins.
+5. Set it up as in [Setup](#-setup). Settings and sign-in are separate from the store version's, so you sign in again even if you used that before.
+
+BRAT installs the latest published release and keeps it updated. Releases are made with the **Release Automation** workflow (Actions → Release Automation → Run workflow), which creates a **draft** release; it reaches BRAT once someone publishes the draft on the Releases page.
+
+The sections below are for the original plugin.
+
 ### Community Plugin Store (Recommended)
 
 1. Open Obsidian → Settings → Community Plugins → **Browse**
@@ -54,8 +69,8 @@ Sync your Obsidian vault with **OneDrive**. Zero-config for personal Microsoft a
 
 ### Manual
 
-1. Download `main.js` and `manifest.json` from the [latest release](https://github.com/JeffSteinbok/obsidian-onedrive/releases)
-2. Place them in `.obsidian/plugins/onedrive-sync/`
+1. Download `main.js`, `manifest.json` and `styles.css` from the [latest release](https://github.com/Poole-Associates/obsidian-OneDrive/releases)
+2. Place them in `.obsidian/plugins/onedrive-sync-poole/`
 3. Enable the plugin in Settings → Community Plugins
 
 ## 🔧 Setup
@@ -111,7 +126,7 @@ Available via the command palette (`Ctrl/Cmd+P`):
 
 The plugin hardcodes these exclusions for safety:
 
-- `.obsidian/plugins/onedrive-sync/` — the plugin's own folder is **always excluded** to prevent syncing its `data.json` (which contains sync state and configuration) and to avoid self-downgrade scenarios where one device overwrites another's plugin binary. Authentication tokens are stored separately using Obsidian's [SecretStorage API](https://docs.obsidian.md/plugins/guides/secret-storage), not in `data.json`.
+- `.obsidian/plugins/onedrive-sync-poole/` — the plugin's own folder is **always excluded** (and so is the store version's `onedrive-sync/` folder) to prevent syncing its `data.json` (which contains sync state and configuration) and to avoid self-downgrade scenarios where one device overwrites another's plugin binary. Authentication tokens are stored separately using Obsidian's [SecretStorage API](https://docs.obsidian.md/plugins/guides/secret-storage), not in `data.json`.
 - `.obsidian/workspace*.json` — per-device UI state (Obsidian Sync excludes these too)
 - `_OneDriveSyncLogs/` — device-local debug logs
 
@@ -154,6 +169,6 @@ This plugin is designed with mobile as a **primary target**:
 ## Security & Privacy
 
 - **Authentication tokens** (OAuth access and refresh tokens) are stored using Obsidian's [SecretStorage API](https://docs.obsidian.md/plugins/guides/secret-storage), which keeps them outside of `data.json` and in a platform-appropriate secure store. They are never written to files that could be accidentally synced or exposed.
-- **The plugin's own folder** (`.obsidian/plugins/onedrive-sync/`) is always excluded from sync. Even though tokens are no longer in `data.json`, the exclusion remains to prevent self-downgrade (one device overwriting another's plugin binary) and to keep device-specific sync state separate.
+- **The plugin's own folder** (`.obsidian/plugins/onedrive-sync-poole/`) is always excluded from sync. Even though tokens are no longer in `data.json`, the exclusion remains to prevent self-downgrade (one device overwriting another's plugin binary) and to keep device-specific sync state separate.
 - **No data leaves your OneDrive** — the plugin communicates directly with Microsoft Graph. There is no intermediary server.
 - **Vault file enumeration** — the plugin reads your vault's file list to determine what to sync. This is inherent to any sync tool, but the information never leaves your device except as uploads to your own OneDrive.

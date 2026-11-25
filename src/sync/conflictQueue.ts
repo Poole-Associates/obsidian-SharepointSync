@@ -10,10 +10,11 @@ import { logger } from '../utils/logger';
 import { createConflictFileName, isTextExtension, normalizePath } from '../utils/pathUtils';
 import { EventManager } from './eventManager';
 import { SyncStateManager } from './syncState';
+import { PLUGIN_ID } from '../pluginId';
 
 function getConflictsDir(configDir: string): string {
 	const normalizedConfigDir = normalizePath(configDir).replace(/\/+$/g, '');
-	return `${normalizedConfigDir}/plugins/onedrive-sync/conflicts`;
+	return `${normalizedConfigDir}/plugins/${PLUGIN_ID}/conflicts`;
 }
 
 export class ConflictQueue {

@@ -55,10 +55,10 @@ describe('TokenStorage', () => {
 		it('should persist tokens to SecretStorage', () => {
 			storage.setTokens('access', 'refresh', 3600);
 
-			expect(mockApp.secretStorage.setSecret).toHaveBeenCalledWith('access-token', 'access');
-			expect(mockApp.secretStorage.setSecret).toHaveBeenCalledWith('refresh-token', 'refresh');
-			expect(mockApp.secretStorage.setSecret).toHaveBeenCalledWith('token-expires-at', expect.any(String));
-			expect(mockApp.secretStorage.setSecret).toHaveBeenCalledWith('token-expires-in', '3600');
+			expect(mockApp.secretStorage.setSecret).toHaveBeenCalledWith('onedrive-sync-poole-access-token', 'access');
+			expect(mockApp.secretStorage.setSecret).toHaveBeenCalledWith('onedrive-sync-poole-refresh-token', 'refresh');
+			expect(mockApp.secretStorage.setSecret).toHaveBeenCalledWith('onedrive-sync-poole-token-expires-at', expect.any(String));
+			expect(mockApp.secretStorage.setSecret).toHaveBeenCalledWith('onedrive-sync-poole-token-expires-in', '3600');
 		});
 	});
 
@@ -75,10 +75,24 @@ describe('TokenStorage', () => {
 			expect(newStorage.getRefreshToken()).toBe('stored-refresh');
 		});
 
+		// SecretStorage is shared by all plugins. The community-store "OneDrive
+		// Sync" stores its tokens under the bare names; this build must not pick
+		// them up, or both would refresh (and so invalidate) the same token.
+		it('should ignore tokens stored by the community-store version', async () => {
+			mockApp.secretStorage.setSecret('access-token', 'store-access');
+			mockApp.secretStorage.setSecret('refresh-token', 'store-refresh');
+			mockApp.secretStorage.setSecret('token-expires-at', String(Date.now() + 3600_000));
+
+			await storage.loadTokens();
+
+			expect(storage.hasTokens()).toBe(false);
+			expect(storage.getAccessToken()).not.toBe('store-access');
+		});
+
 		it('should sanitize a corrupt (non-numeric) expiry into an expired token', async () => {
-			mockApp.secretStorage.setSecret('access-token', 'access');
-			mockApp.secretStorage.setSecret('refresh-token', 'refresh');
-			mockApp.secretStorage.setSecret('token-expires-at', 'not-a-number');
+			mockApp.secretStorage.setSecret('onedrive-sync-poole-access-token', 'access');
+			mockApp.secretStorage.setSecret('onedrive-sync-poole-refresh-token', 'refresh');
+			mockApp.secretStorage.setSecret('onedrive-sync-poole-token-expires-at', 'not-a-number');
 
 			await storage.loadTokens();
 
@@ -108,7 +122,7 @@ describe('TokenStorage', () => {
 			expect(storage.getAccessToken()).toBe(accessToken);
 			expect(storage.getRefreshToken()).toBe(refreshToken);
 			// Should have saved to SecretStorage
-			expect(mockApp.secretStorage.setSecret).toHaveBeenCalledWith('access-token', accessToken);
+			expect(mockApp.secretStorage.setSecret).toHaveBeenCalledWith('onedrive-sync-poole-access-token', accessToken);
 		});
 
 		it('should migrate legacy unobfuscated tokens', async () => {
@@ -190,10 +204,10 @@ describe('TokenStorage', () => {
 
 			storage.clearTokens();
 
-			expect(mockApp.secretStorage.setSecret).toHaveBeenCalledWith('access-token', '');
-			expect(mockApp.secretStorage.setSecret).toHaveBeenCalledWith('refresh-token', '');
-			expect(mockApp.secretStorage.setSecret).toHaveBeenCalledWith('token-expires-at', '');
-			expect(mockApp.secretStorage.setSecret).toHaveBeenCalledWith('token-expires-in', '');
+			expect(mockApp.secretStorage.setSecret).toHaveBeenCalledWith('onedrive-sync-poole-access-token', '');
+			expect(mockApp.secretStorage.setSecret).toHaveBeenCalledWith('onedrive-sync-poole-refresh-token', '');
+			expect(mockApp.secretStorage.setSecret).toHaveBeenCalledWith('onedrive-sync-poole-token-expires-at', '');
+			expect(mockApp.secretStorage.setSecret).toHaveBeenCalledWith('onedrive-sync-poole-token-expires-in', '');
 		});
 	});
 });
