@@ -42,7 +42,7 @@ Sync your Obsidian vault with **OneDrive**. Zero-config for personal Microsoft a
 
 1. If the store's **OneDrive Sync** is installed in this vault, disable or uninstall it first (Settings → Community Plugins). Two sync plugins on one vault would fight over the same files.
 2. Install [BRAT](https://github.com/TfTHacker/obsidian42-brat) from Community Plugins and enable it.
-3. BRAT settings → **Add Beta Plugin** → `Poole-Associates/obsidian-OneDrive` → **Add Plugin**.
+3. BRAT settings → **Add Beta Plugin** → `Poole-Associates/obsidian-SharepointSync` → **Add Plugin**.
 4. Enable **OneDrive Sync (Poole Associates)** in Settings → Community Plugins.
 5. Set it up as in [Setup](#-setup). Settings and sign-in are separate from the store version's, so you sign in again even if you used that before.
 
@@ -69,7 +69,7 @@ The sections below are for the original plugin.
 
 ### Manual
 
-1. Download `main.js`, `manifest.json` and `styles.css` from the [latest release](https://github.com/Poole-Associates/obsidian-OneDrive/releases)
+1. Download `main.js`, `manifest.json` and `styles.css` from the [latest release](https://github.com/Poole-Associates/obsidian-SharepointSync/releases)
 2. Place them in `.obsidian/plugins/onedrive-sync-poole/`
 3. Enable the plugin in Settings → Community Plugins
 
