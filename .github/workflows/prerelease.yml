@@ -40,7 +40,10 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: main
-          token: ${{ secrets.PAT_TOKEN }}
+          # PAT_TOKEN lets the version-bump push get past branch protection.
+          # Without it, fall back to the workflow token (enough when main
+          # isn't protected), like postmortem-publish.yml does.
+          token: ${{ secrets.PAT_TOKEN || secrets.GITHUB_TOKEN }}
           fetch-depth: 0  # Fetch all history for merging
 
       - uses: actions/setup-node@v4

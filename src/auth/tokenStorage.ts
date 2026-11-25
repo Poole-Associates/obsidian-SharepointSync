@@ -6,12 +6,17 @@
 import { App } from 'obsidian';
 import { StoredTokens } from '../types';
 import { logger } from '../utils/logger';
+import { PLUGIN_ID } from '../pluginId';
 
+// Obsidian's SecretStorage is shared by every plugin, so the names carry this
+// plugin's id. Without it, this build and the community-store "OneDrive Sync"
+// would read and refresh the same tokens, and each refresh would invalidate
+// the other's refresh token.
 const SECRET_KEYS = {
-	ACCESS_TOKEN: 'access-token',
-	REFRESH_TOKEN: 'refresh-token',
-	EXPIRES_AT: 'token-expires-at',
-	EXPIRES_IN: 'token-expires-in',
+	ACCESS_TOKEN: `${PLUGIN_ID}-access-token`,
+	REFRESH_TOKEN: `${PLUGIN_ID}-refresh-token`,
+	EXPIRES_AT: `${PLUGIN_ID}-token-expires-at`,
+	EXPIRES_IN: `${PLUGIN_ID}-token-expires-in`,
 } as const;
 
 /**

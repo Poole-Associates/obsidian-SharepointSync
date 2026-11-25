@@ -46,8 +46,8 @@ export const mockApp = {
 export const mockPlugin = {
 	app: mockApp,
 	manifest: {
-		id: 'onedrive-sync',
-		name: 'OneDrive Sync',
+		id: 'onedrive-sync-poole',
+		name: 'OneDrive Sync (Poole Associates)',
 		version: '0.1.0',
 	},
 	loadData: vi.fn().mockResolvedValue({}),

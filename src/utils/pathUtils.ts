@@ -2,6 +2,8 @@
  * Path manipulation utilities for cross-platform compatibility
  */
 
+import { PLUGIN_ID, STORE_PLUGIN_ID } from '../pluginId';
+
 /**
  * Normalize path separators to forward slashes
  */
@@ -334,7 +336,9 @@ export function shouldSyncVaultPath(
 	const syncableObsidianAppSettings = getSyncableObsidianAppSettings(normalizedConfigDir);
 	const syncableObsidianPluginManifests = getSyncableObsidianPluginManifests(normalizedConfigDir);
 	const syncableObsidianBookmarks = getSyncableObsidianBookmarks(normalizedConfigDir);
-	const ownPluginFolder = buildConfigPath(normalizedConfigDir, 'plugins', 'onedrive-sync');
+	const ownPluginFolder = buildConfigPath(normalizedConfigDir, 'plugins', PLUGIN_ID);
+	// The community-store plugin this one derives from, if still installed
+	const storePluginFolder = buildConfigPath(normalizedConfigDir, 'plugins', STORE_PLUGIN_ID);
 	// Exclude the old plugin folder too, so upgrades don't sync stale auth/state
 	const oldPluginFolder = buildConfigPath(normalizedConfigDir, 'plugins', 'obsidian-onedrive');
 
@@ -349,6 +353,12 @@ export function shouldSyncVaultPath(
 	// stay device-local, and syncing main.js across devices would let an older
 	// install on one device silently downgrade a newer install on another.
 	if (normalized === ownPluginFolder || normalized.startsWith(`${ownPluginFolder}/`)) {
+		return false;
+	}
+
+	// Never sync the store version's folder either: its data.json and binary
+	// are device-local for the same reasons, and belong to another plugin.
+	if (normalized === storePluginFolder || normalized.startsWith(`${storePluginFolder}/`)) {
 		return false;
 	}
 
